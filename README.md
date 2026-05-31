@@ -1,6 +1,6 @@
-# Microsserviço de Compliance Regulatório (AgentCompliance)
+# Agente Especializado de Compliance Regulatório (AgentCompliance)
 
-Este repositório contém o microsserviço independente **`compliance-agent`**, extraído do monorepo principal como parte da evolução para a arquitetura de microagentes distribuídos (v3). 
+Este repositório contém o agente especializado independente **`compliance-agent`**, extraído do monorepo principal como parte da evolução para a arquitetura de agentes especializados distribuídos (v3). 
 
 A aplicação foi reescrita do zero utilizando **Node.js**, **TypeScript (Strict Mode)**, **Fastify** (framework HTTP de altíssima performance) e **Zod** para validações estruturais de dados em tempo de execução.
 
@@ -62,7 +62,7 @@ docker build -t compliance-agent:latest .
 
 ### 2. Executar o Container
 ```bash
-docker run -d -p 8085:8085 --name compliance-service --env-file .env compliance-agent:latest
+docker run -d -p 8085:8085 --name compliance-agent --env-file .env compliance-agent:latest
 ```
 
 ---

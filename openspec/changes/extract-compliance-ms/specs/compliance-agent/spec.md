@@ -1,4 +1,4 @@
-# Delta Spec: Microsserviço de Compliance Regulatório (extract-compliance-ms)
+# Delta Spec: Agente Especializado de Compliance Regulatório (extract-compliance-ms)
 
 **Change ID:** extract-compliance-ms  
 **Tipo:** ADDED / EXTRACTION  
@@ -18,7 +18,7 @@
 
 ## 2. Responsabilidades e Limites
 
-### O microsserviço DEVE:
+### O agente DEVE:
 1. Validar sintaticamente o formato do CPF mascarado proponente (`XXX.XXX.XXX-XX`) no payload recebido em `/v1/compliance`.
 2. Assegurar idempotência estrita de processamento baseada no parâmetro `request_id` enviado no request, retornando o resultado cacheado instantaneamente caso a chave seja encontrada em menos de 24h de TTL.
 3. Propagar obrigatoriamente o identificador de rastreabilidade `X-Trace-Id` recebido no cabeçalho da requisição para todos os cabeçalhos e corpos de resposta.
@@ -26,7 +26,7 @@
 5. Interromper a esteira na primeira falha identificada (regra de curto-circuito / short-circuit).
 6. Responder nos limites restritos de SLA (timeout contratual de 5.000ms).
 
-### O microsserviço NÃO DEVE:
+### O agente NÃO DEVE:
 * Implementar validações ou integrações com chaves OAuth 2.0 locais (segurança tratada como responsabilidade exclusiva do API Gateway da Sensedia).
 * Persistir registros permanentes ou dados pessoais sensíveis identificáveis sem mascaramento (atendimento estrito ao princípio de segurança por design e LGPD).
 * Escalar qualquer erro técnico, indisponibilidade ou falha regulatória para revisão humana (HITL) dentro do seu contexto — falha de compliance resulta em rejeição direta e imediata.
@@ -183,11 +183,11 @@ Para simular com exatidão a lógica de um motor de conformidade regulatória ro
 
 ### 7.1 Opcionalidade do `trace_id` no Request Body
 * **Contexto:** Embora o payload enviado pelo orquestrador legador possa incluir a propriedade `trace_id` no corpo do JSON, a especificação A2A formalizada no Agent Card define o cabeçalho HTTP **`X-Trace-Id` como o canal obrigatório e primário** para correlação de telemetria distribuída.
-* **Decisão:** No esquema Zod e Fastify do microsserviço, o campo `trace_id` no corpo do request é explicitamente tratado como **opcional (`.optional()`)**. A ausência dele no body não impede o processamento, desde que o cabeçalho `X-Trace-Id` esteja presente na requisição HTTP.
+* **Decisão:** No esquema Zod e Fastify do agente especializado, o campo `trace_id` no corpo do request é explicitamente tratado como **opcional (`.optional()`)**. A ausência dele no body não impede o processamento, desde que o cabeçalho `X-Trace-Id` esteja presente na requisição HTTP.
 
 ### 7.2 Semântica de Campos Não-Verificados em Falhas de Short-Circuit
 * **Contexto:** Quando ocorre um curto-circuito (ex: KYC reprovado), as etapas seguintes de PLD e LGPD não são executadas. Semanticamente, retornar `pld_clear: false` e `lgpd_consent: false` é ambíguo, pois dá a entender que foram executados e falharam, quando o correto seria representá-los como não-avaliados (`null` ou omitidos).
 * **Restrição de Retrocompatibilidade (v2):** O contrato especificado no Agent Card (`compliance-agent-card.json`) do core de crédito define `kyc_approved`, `pld_clear` e `lgpd_consent` como booleanos estritos **não-anuláveis (non-nullable)**. Alterar para `null` ou omitir esses campos quebraria a desserialização rígida de classes consumidoras legadas escritas em Python/Go/C#.
-* **Decisão:** Para compatibilidade com a v2, o microsserviço mantém o comportamento de retornar `false` nas etapas não-executadas.
+* **Decisão:** Para compatibilidade com a v2, o agente especializado mantém o comportamento de retornar `false` nas etapas não-executadas.
 * **Proposta para a v3 (Evolução):** Fica documentada a recomendação de alterar o Agent Card na v3 para suportar tipos anuláveis (`boolean | null`) para expressar explicitamente que a validação foi pulada/não-executada por short-circuit.
 

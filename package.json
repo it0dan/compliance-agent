@@ -1,12 +1,15 @@
 {
   "name": "compliance-agent",
   "version": "1.0.0",
-  "description": "Microsserviço independente de compliance regulatório (KYC, PLD, LGPD) para o ecossistema de crédito.",
+  "description": "Agente especializado independente de compliance regulatório (KYC, PLD, LGPD) para o ecossistema de crédito.",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "compliance",
@@ -24,7 +27,11 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
+    "@types/supertest": "latest",
+    "@vitest/coverage-v8": "latest",
+    "supertest": "latest",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "vitest": "latest"
   }
 }

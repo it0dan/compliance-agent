@@ -1,4 +1,4 @@
-# Tasks: Extração do Microsserviço de Compliance Independente
+# Tasks: Extração do Agente Especializado de Compliance Independente
 
 **Change ID:** extract-compliance-ms  
 **Derivado de:** proposal.md  

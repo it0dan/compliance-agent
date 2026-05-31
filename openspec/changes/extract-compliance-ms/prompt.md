@@ -7,7 +7,7 @@
 
 ## 1. Diretrizes de Derivação (Spec-to-Code)
 
-Este documento atua como a especificação SPDD (Spec-Driven Development) para orientar o desenvolvimento do microsserviço de compliance em TypeScript/Fastify. A estrutura e comportamento do código devem ser derivados estritamente dos seguintes pilares da especificação:
+Este documento atua como a especificação SPDD (Spec-Driven Development) para orientar o desenvolvimento do agente especializado de compliance em TypeScript/Fastify. A estrutura e comportamento do código devem ser derivados estritamente dos seguintes pilares da especificação:
 
 ### A. Roteamento e Versionamento (Ref: `spec.md` - Seção 3 e `adr-005`):
 * O endpoint principal deve ser registrado sob o prefixo de versão `/v1` resultando em `POST /v1/compliance`.
