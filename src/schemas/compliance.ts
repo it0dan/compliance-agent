@@ -21,11 +21,12 @@ export const ComplianceRequestSchema = z.object({
     }),
   trace_id: z
     .string({
-      required_error: "trace_id é obrigatório"
+      invalid_type_error: "trace_id deve ser uma string"
     })
     .uuid({
       message: "trace_id deve ser um UUID válido"
     })
+    .optional()
 });
 
 // Inferência de Tipagem TypeScript para o Input

@@ -22,6 +22,22 @@ export default async function complianceRoutes(fastify: FastifyInstance) {
       return;
     }
 
+    // 1.1 Validar que trace_id está presente no body ou no header X-Trace-Id
+    const hasTraceIdInHeader = typeof request.headers['x-trace-id'] === 'string' && request.headers['x-trace-id'].trim().length > 0;
+    if (!validation.data.trace_id && !hasTraceIdInHeader) {
+      request.log.warn('Falha de validação: trace_id ausente no corpo e cabeçalho X-Trace-Id ausente');
+      reply.status(422).send({
+        error: 'validation_error',
+        details: [
+          {
+            path: ['trace_id'],
+            message: 'trace_id é obrigatório no corpo se o header X-Trace-Id não for enviado'
+          }
+        ]
+      });
+      return;
+    }
+
     const { applicant_masked_cpf, request_id } = validation.data;
 
     // 2. Simulação de Timeout de SLA (CPF contendo "333")
