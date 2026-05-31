@@ -22,24 +22,21 @@ export default async function complianceRoutes(fastify: FastifyInstance) {
       return;
     }
 
-    const { applicant_masked_cpf, request_id, scenario } = validation.data;
+    const { applicant_masked_cpf, request_id } = validation.data;
 
-    // 2. Simulação de Timeout de SLA (CPF contendo "333" ou cenário bureau_error)
-    const isTimeout = applicant_masked_cpf.startsWith('333') || 
-                      applicant_masked_cpf.includes('333') || 
-                      scenario === 'bureau_error';
+    // 2. Simulação de Timeout de SLA (CPF contendo "333")
+    const isTimeout = applicant_masked_cpf.includes('333');
                       
     if (isTimeout) {
       request.log.info({ applicant_masked_cpf, request_id }, 'Simulando atraso de timeout regulatório...');
       await sleep(5100); // 5.1 segundos (excede o SLA de 5s)
     }
 
-    // 3. Execução da Lógica da Esteira
+    // 3. Execução da Lógica da Esteira (Comportamento Determinístico por CPF)
     const result = await complianceService.executeVerification(
       applicant_masked_cpf,
       request_id,
-      request.traceId,
-      scenario
+      request.traceId
     );
 
     // 4. Salva no cache de idempotência se a operação foi processada com sucesso

@@ -29,6 +29,7 @@ COPY package*.json ./
 RUN npm ci --only=production
 
 COPY --from=builder /usr/src/app/dist ./dist
+COPY .well-known ./.well-known
 
 EXPOSE 8085
 

@@ -20,11 +20,12 @@ export const ComplianceRequestSchema = z.object({
       message: "request_id deve ser um UUID válido"
     }),
   trace_id: z
-    .string()
-    .optional(),
-  scenario: z
-    .string()
-    .optional()
+    .string({
+      required_error: "trace_id é obrigatório"
+    })
+    .uuid({
+      message: "trace_id deve ser um UUID válido"
+    })
 });
 
 // Inferência de Tipagem TypeScript para o Input
@@ -36,8 +37,8 @@ export type ComplianceRequest = z.infer<typeof ComplianceRequestSchema>;
 export const ComplianceResponseSchema = z.object({
   request_id: z.string().uuid(),
   kyc_approved: z.boolean(),
-  pld_clear: z.boolean(),
-  lgpd_consent: z.boolean(),
+  pld_clear: z.boolean().nullable(),
+  lgpd_consent: z.boolean().nullable(),
   status: z.enum(['ok', 'rejected', 'error', 'timeout']),
   reason: z.enum([
     'kyc_failed', 'kyc_unavailable', 'kyc_timeout',

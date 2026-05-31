@@ -8,8 +8,7 @@ export class ComplianceService {
   public async executeVerification(
     cpf: string,
     requestId: string,
-    traceId?: string,
-    scenario?: string
+    traceId?: string
   ): Promise<ComplianceResponse> {
     // TODO: Quando os servidores MCP reais (mcp-kyc, mcp-pld, etc.) ou bancos de dados reais forem integrados,
     // o cálculo do tempo de processamento abaixo (Date.now() - startTime) passará a medir a latência real de E/S.
@@ -17,10 +16,10 @@ export class ComplianceService {
     const startTime = Date.now();
     const toolsCalled: string[] = [];
 
-    // Normaliza para verificar se contém "111", "222" ou "333" nos dígitos significativos
-    const isKycFail = cpf.startsWith('111') || cpf.includes('111') || scenario === 'compliance_fail';
-    const isPldFail = cpf.startsWith('222') || cpf.includes('222');
-    const isTimeout = cpf.startsWith('333') || cpf.includes('333') || scenario === 'bureau_error';
+    // Lógica Determinística por CPF Mascarado
+    const isKycFail = cpf.includes('111');
+    const isPldFail = cpf.includes('222');
+    const isTimeout = cpf.includes('333');
 
     // 1. Verificação KYC (verify_kyc)
     toolsCalled.push('verify_kyc');
@@ -31,8 +30,8 @@ export class ComplianceService {
       return {
         request_id: requestId,
         kyc_approved: false,
-        pld_clear: false,
-        lgpd_consent: false,
+        pld_clear: null, // Não verificado por causa do timeout
+        lgpd_consent: null, // Não verificado por causa do timeout
         status: 'timeout',
         reason: 'kyc_timeout',
         details: 'Tempo limite de execução excedido durante a consulta KYC.',
@@ -46,8 +45,8 @@ export class ComplianceService {
       return {
         request_id: requestId,
         kyc_approved: false,
-        pld_clear: false,
-        lgpd_consent: false,
+        pld_clear: null, // Não verificado por causa do short-circuit do KYC
+        lgpd_consent: null, // Não verificado por causa do short-circuit do KYC
         status: 'rejected',
         reason: 'kyc_failed',
         details: 'Falha cadastral: CPF com inconsistências ativas no banco de dados de KYC.',
@@ -64,8 +63,8 @@ export class ComplianceService {
       return {
         request_id: requestId,
         kyc_approved: true,
-        pld_clear: false,
-        lgpd_consent: false,
+        pld_clear: false, // Verificado e REPROVADO
+        lgpd_consent: null, // Não verificado por causa do short-circuit do PLD
         status: 'rejected',
         reason: 'pld_positive',
         details: 'Rejeitado devido a apontamento restritivo em listas de PEP/PLD/Sanções.',
@@ -82,8 +81,8 @@ export class ComplianceService {
     return {
       request_id: requestId,
       kyc_approved: true,
-      pld_clear: true,
-      lgpd_consent: true,
+      pld_clear: true, // Verificado e Aprovado
+      lgpd_consent: true, // Verificado e Aprovado
       status: 'ok',
       reason: null,
       details: 'Validações cadastrais, regulatórias e LGPD concluídas com sucesso.',
