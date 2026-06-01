@@ -4,3 +4,10 @@ dist/
 .DS_Store
 *.log
 coverage/
+
+# --- context engineering: artefatos de sessão (efêmeros, não versionar) ---
+.agent/handoff.md
+
+# overrides pessoais de contexto de agente
+CLAUDE.local.md
+.agents.local.md
