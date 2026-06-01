@@ -135,3 +135,30 @@ curl -si -X POST http://localhost:8085/v1/compliance \
 ```bash
 curl -s http://localhost:8085/.well-known/agent.json | jq '.name, .version, .skills'
 ```
+
+---
+
+## 📊 Avaliação do Agente (Evals com PromptFoo)
+
+Para avaliar o comportamento cognitivo do agente em cenários adversariais, de bypass e de conformidade contra o Sensedia AI Gateway usando PromptFoo:
+
+### 1. Requisitos de Ambiente
+Garante que as variáveis do Sensedia AI Gateway estejam configuradas no seu ambiente ou no arquivo `.env`:
+```ini
+AI_GATEWAY_CLIENT_ID=sua-client-id
+AI_GATEWAY_CLIENT_SECRET=seu-client-secret
+AI_GATEWAY_OAUTH_ENDPOINT=https://ai-gateway-auth-server.sensedia.com/realms/us/protocol/openid-connect/token
+```
+
+### 2. Executar Suite de Evals
+```bash
+./run_all_evals.sh
+# ou via npm
+npm run eval
+```
+
+### 3. Visualizar Dashboard Web
+```bash
+npx promptfoo view
+```
+

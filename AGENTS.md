@@ -18,9 +18,13 @@ porque é uma capability de domínio, não um componente interno do MAS de créd
 ## Comandos essenciais
 
 ```bash
-npm test                   # execução única
-npm run test:watch         # modo watch
+npm test                   # execução única de testes de unidade e integração
+npm run test:watch         # modo watch de testes
 npm run test:coverage      # coverage com v8
+
+# Executar evals (PromptFoo)
+./run_all_evals.sh         # execução de avaliações do agente especializado
+npm run eval               # via npm script
 
 docker build -t compliance-agent .
 docker run -p 8085:8085 --env-file .env compliance-agent
@@ -81,13 +85,17 @@ compliance-agent/
 ├── tests/
 │   ├── unit/complianceService.test.ts
 │   └── integration/compliance.test.ts ← 10 casos ✓
+├── evals/
+│   └── compliance.yaml                ← Config de avaliação (PromptFoo) ✓
 ├── openspec/
 │   ├── specs/compliance-agent/spec.md ← MODELO CANÔNICO — ler antes de trabalho
 │   ├── design.md                      ← DT-001 a DT-005
 │   ├── prompt.md                      ← SPDD derivation guide
 │   └── changes/archive/               ← histórico imutável
-└── .well-known/
-    └── agent.json                     ← Agent Card A2A (fonte de verdade do contrato A2A)
+├── .well-known/
+│   └── agent.json                     ← Agent Card A2A (fonte de verdade do contrato A2A)
+├── run_all_evals.sh                   ← Script de execução de evals
+└── package.json                       ← Config do projeto + script 'eval'
 ```
 
 ## Modelo canônico — ler antes de qualquer trabalho arquitetural
