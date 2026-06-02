@@ -140,6 +140,20 @@ Após conclusão e validação → mover para `openspec/changes/archive/<nome-da
 - Non-breaking changes → `/v1` diretamente, sem nova versão
 - Breaking changes → nova versão `/v2`, deprecation mínimo 90 dias com headers `Deprecation` e `Sunset`
 
+## A2A Protocol
+- Como o Agent Card é publicado em `.well-known/agent.json`
+- Campos obrigatórios: `name`, `description`, `url`, `capabilities`
+- Como o orquestrador do MAS descobre e consome o Agent Card
+
+## Débito Técnico v2.1
+- `idempotencyPreHandler` hoje é global com guard `method !== POST` — deve ser scoped à rota `/v1/compliance`
+- `processing_time_ms` retorna ~0ms porque o `Date.now()` está no lugar errado — deve ser capturado no início do handler
+- Flag `COMPLIANCE_FALLBACK_ENABLED` no MAS não tem data de expiração explícita — adicionar `COMPLIANCE_FALLBACK_EXPIRES` como env var
+
+## OpenSpec Status
+- `openspec/changes/extract-compliance-ms/` está pendente de arquivamento (testes 10/10 ✓ — mudança concluída)
+- Próximo passo: `mv openspec/changes/extract-compliance-ms/ openspec/changes/archive/`
+
 ## Contexto de sessão
 
 **Ao iniciar:** leia `.agent/handoff.md`. Se não estiver vazio, o conteúdo
